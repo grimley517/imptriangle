@@ -1,6 +1,6 @@
 import math
 
-ACCURACY = 10**-14
+ACCURACY = 10**(-1)
 
 def cos(x):
     x =math.radians(x)
@@ -12,39 +12,55 @@ def sin(x):
     x = math.sin(x)
     return (x)
 
+def getLength(pA,pB):
+    xdist = pA[0]-pB[0]
+    ydist = pA[1] -pB[1]
+    length = math.hypot(xdist, ydist)
+    return (length)
+
+def getAngle(pA, pB):
+    xdist = pA[0]-pB[0]
+    ydist = pA[1] -pB[1]
+    angle = ydist/xdist
+    angle = math.atan2(ydist, xdist)
+    angle = math.degrees(angle)
+    return(angle)
+
+
 def checkInt(floatToChk):
     intver = int(floatToChk)
     zero = math.fabs(floatToChk - intver)
     return (zero < ACCURACY)
 
-def getB(length):
-    x=length*cos(60)
-    y=length*sin(60)
-    return (x,y)
-
-def getC(length):
-    x=0
-    y=length
-    return (x,y)
+def findC(pA, pB):
+    '''finds point C given two points pA and pB suct that ABC is equilateral'''
+    length = getLength(pA,pB)
+    angle = getAngle(pA,pB)
+    angle += 60
+    C = (length * cos(angle), length * sin(angle))
+    return (C)
 
 def testIntCoOrds(x,y):
     return (checkInt(x) and checkInt(y))
 
-def done():
+def run():
     return (testIntCoOrds(B[0],B[1]) and testIntCoOrds(C[0],C[1]))
-    
-def getCoords(length):
-    B = getB(length)
-    C = getC(length)
 
 
-B = (0,0)
-C = (0,0)
-length = 1
-getCoords(length)
-while done():
-    length += 1
-    getCoords(length)
+
+A = (0,0)
+i = 1
+j = 0
+B = (i,j)
+C = findC(A, B)
+while run():
+    if j>i:
+        j=0
+        i+=1
+    else:
+        j+=1
+    B = i,j
+    C = findC(A, B)
 print(B)
 print(C)
-    
+input()
